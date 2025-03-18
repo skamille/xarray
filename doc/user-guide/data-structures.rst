@@ -524,7 +524,7 @@ keys), and so has the same key properties:
 A single :py:class:`~xarray.DataTree` object acts much like a single :py:class:`~xarray.Dataset` object, and
 has a similar set of dict-like methods defined upon it. However, :py:class:`~xarray.DataTree`\s
 can also contain other :py:class:`~xarray.DataTree` objects, so they can be thought of as
-nested dict-like containers of both :py:class:`xarray.DataArray`\s and :py:class:`~xarray.DataTree`\s.
+nested dict-like containers of both :py:class:`xarray.Dataset`\s and :py:class:`~xarray.DataTree`\s.
 
 A single datatree object is known as a "node", and its position relative to
 other nodes is defined by two more key properties:
@@ -558,7 +558,7 @@ specifying the nodes' relationship to one another as you create each one.
 The :py:class:`~xarray.DataTree` constructor takes:
 
 - ``dataset``: The data that will be stored in this node, represented by a single
-  :py:class:`xarray.Dataset`, or a named :py:class:`xarray.DataArray`.
+  :py:class:`xarray.Dataset`.
 - ``children``: The various child nodes (if there are any), given as a mapping
   from string keys to :py:class:`~xarray.DataTree` objects.
 - ``name``: A string to use as the name of this node.
