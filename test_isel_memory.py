@@ -41,7 +41,7 @@ def test_isel_memory_usage():
     
     # Now actually access the data to trigger loading/computation
     print("Accessing data...")
-    _ = result.var.values
+    _ = result["var"].values
     
     # Measure memory after accessing data
     after_access_mem = get_memory()
