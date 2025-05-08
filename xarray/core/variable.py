@@ -618,6 +618,38 @@ class Variable(NamedArray, AbstractArray, VariableArithmetic):
         if all(not isinstance(k, Variable) for k in key):
             return self._broadcast_indexes_outer(key)
 
+        # MEMORY OPTIMIZATION: Special handling for 2D Variable indexers with first dim of length 1
+        # This is a common pattern with isel(dim=Variable(['window', 'dim'], [...]))
+        # where we can avoid the memory-intensive vectorized indexing
+        has_2d_var_with_len1_dim = False
+        for k in key:
+            if (
+                isinstance(k, Variable) 
+                and k.ndim == 2 
+                and k.shape[0] == 1 
+                and not is_duck_dask_array(k.data)
+            ):
+                has_2d_var_with_len1_dim = True
+                break
+                
+        if has_2d_var_with_len1_dim:
+            # Convert 2D Variable indexers with first dim of length 1 to 1D for more efficient indexing
+            new_key = []
+            for k in key:
+                if (
+                    isinstance(k, Variable) 
+                    and k.ndim == 2 
+                    and k.shape[0] == 1 
+                    and not is_duck_dask_array(k.data)
+                ):
+                    # Extract the second dimension as a 1D array for more efficient indexing
+                    new_k = Variable(k.dims[1:], k.data[0])
+                    new_key.append(new_k)
+                else:
+                    new_key.append(k)
+            # Use the transformed key with the standard logic
+            key = tuple(new_key)
+
         # If all key is 1-dimensional and there are no duplicate labels,
         # key can be mapped as an OuterIndexer.
         dims = []

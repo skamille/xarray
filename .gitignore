@@ -86,3 +86,5 @@ doc/videos-gallery.txt
 # gitignore to make it _easier_ to work with `uv`, not as an indication that I
 # think we shouldn't...)
 uv.lock
+
+**/.claude/settings.local.json
